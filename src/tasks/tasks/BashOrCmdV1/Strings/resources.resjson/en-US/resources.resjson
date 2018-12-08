@@ -1,0 +1,10 @@
+{
+  "loc.friendlyName": "Bash or CMD",
+  "loc.helpMarkDown": "",
+  "loc.description": "Execute Bash on POSIX, CMD on Windows",
+  "loc.instanceNameFormat": "Echo $(samplestring)",
+  "loc.input.label.bash": "Bash script",
+  "loc.input.help.bash": "Path to the Bash script",
+  "loc.input.label.cmd": "CMD script",
+  "loc.input.help.cmd": "Path to the CMD script"
+}

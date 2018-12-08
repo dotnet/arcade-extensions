@@ -1,0 +1,37 @@
+{
+    "manifestVersion": 1,
+    "id": "dnceng-build-release-tasks",
+    "name": "Dnceng Build Tasks",
+    "version": "0.0.2",
+    "publisher": "dotnet-dnceng",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],    
+    "description": "Tasks for building in dnceng.",
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "icons": {
+        "default": "images/dotnet-bot-128.jpg"
+    },
+    "files": [
+        {
+            "path": ".artifacts/tasks/BashOrCmdV1",
+            "packagePath": "BashOrCmd/BashOrCmdV1"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "custom-build-release-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "BashOrCmd/BashOrCmdV1"
+            }
+        }
+    ]
+}

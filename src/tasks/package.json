@@ -1,0 +1,50 @@
+{
+  "name": "tasks",
+  "version": "0.5.0",
+  "description": "Tasks for the Azure Pipelines build system",
+  "main": "gulpfile.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "node make.js build",
+    "test": "node make.js test",
+    "testLegacy": "node make.js testLegacy",
+    "package": "node make.js package"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/vsts-tasks"
+  },
+  "keywords": [
+    "Azure",
+    "Pipelines",
+    "build",
+    "tasks"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/vsts-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/vsts-tasks",
+  "devDependencies": {
+    "gulp": "3.9.0",
+    "gulp-util": "3.0.4",
+    "markdown-toc": "^1.2.0",
+    "minimatch": "3.0.2",
+    "minimist": "1.1.1",
+    "mocha": "2.3.3",
+    "mocha-junit-reporter": "1.17.0",
+    "node-uuid": "1.4.6",
+    "q": "1.4.1",
+    "semver": "4.3.3",
+    "shelljs": "^0.3.0",
+    "sync-request": "3.0.1",
+    "typescript": "2.3.4",
+    "validator": "3.33.0",
+    "vsts-task-lib": "^2.7.0",
+    "@types/node": "^10.11.4",
+    "@types/q": "^1.5.1"
+  }
+}
