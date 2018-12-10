@@ -30,7 +30,7 @@ jobs:
 
   - task: PublishBuildArtifacts@1
     displayName: Publish extension artifact
-    condition: succeeded())
+    condition: succeeded()
     inputs:
       pathToPublish: .artifacts\extensions\*.vsix
       artifactName: Extensions
