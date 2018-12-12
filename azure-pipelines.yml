@@ -1,0 +1,37 @@
+trigger:
+  - master
+
+jobs:
+- job: build_Windows
+  displayName: Build (Windows)
+  pool: Hosted VS2017
+
+  steps:
+  # Clean
+  - checkout: self
+    clean: true
+
+  # Use node 8, npm 5
+  - task: NodeTool@0
+    displayName: Use node 8
+    inputs:
+      versionSpec: "8.x"
+
+  # npm install
+  - script: npm install
+    displayName: npm install
+
+  # Build
+  - script: build.cmd
+    displayName: Build tasks
+
+  - script: package.cmd
+    displayName: Create build task extension
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish extension artifact
+    condition: succeeded()
+    inputs:
+      pathToPublish: .artifacts\extensions\*.vsix
+      artifactName: Extensions
+      publishLocation: container
