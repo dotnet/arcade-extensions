@@ -8,4 +8,4 @@ This repo contains the custom build tasks used by dnceng which are distributed i
 
 ## Contributing
 
-Creating a custom build task instructions are [here](./src/tasks/README.md)
+Creating a custom build task instructions are [here](./src/tasks/Readme.md)
