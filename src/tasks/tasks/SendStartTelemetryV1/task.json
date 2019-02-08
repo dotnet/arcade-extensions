@@ -1,0 +1,66 @@
+{
+    "id": "dba7c4fb-764a-4f08-9eb3-f5537b83959e",
+    "name": "sendStartTelemetry",
+    "friendlyName": "Send start telemetry",
+    "description": "Send start job telemetry for .NET Core builds",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "author": "Microsoft",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Echo $(samplestring)",
+    "inputs": [
+        {
+            "name": "helixRepo",
+            "type": "string",
+            "label": "[organization name]/[repository name]",
+            "required": true,
+            "helpMarkDown": "Source repo, e.g. dotnet/arcade"
+        },
+        {
+            "name": "helixType",
+            "type": "string",
+            "label": "telemetry type",
+            "required": false,
+            "helpMarkDown": "Type of telemetry to send, e.g. build/product",
+            "defaultValue": "build/product"
+        },
+        {
+            "name": "maxRetries",
+            "type": "string",
+            "label": "Maximum number of retry attempts",
+            "required": false,
+            "helpMarkDown": "Numeric value, default is 5",
+            "defaultValue": "5"
+        },
+        {
+            "name": "retryDelay",
+            "type": "string",
+            "label": "Number of seconds to wait between retry attempts",
+            "required": "false",
+            "defaultValue": "10"
+        },
+        {
+            "name": "runAsPublic",
+            "type": "boolean",
+            "label": "Override environmental context and send telemetry as public",
+            "required": "false",
+            "defaultValue": "false"
+        },
+        {
+            "name": "buildConfig",
+            "type": "string",
+            "label": "Build configuration",
+            "required": "true",
+            "defaultValue": "Debug"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "index.js"
+        }
+    }
+}

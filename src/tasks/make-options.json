@@ -1,6 +1,8 @@
 {
     "tasks": [
-        "BashOrCmdV1"
+        "BashOrCmdV1",
+        "SendStartTelemetryV1"
+
     ],
     "taskResources": [
         "*.ps1",
