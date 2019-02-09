@@ -17,7 +17,6 @@ function Delay(ms:number) {
 async function Run() {
     try {
         let validEnvironment:boolean = true;
-        validEnvironment = CheckForRequiredEnvironmentVariable("HELIX_JOBTOKEN") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("HELIX_WORKITEMID") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("AGENT_JOBSTATUS") && validEnvironment;
 
@@ -35,7 +34,7 @@ async function Run() {
         }
 
         // Variables provided from the environment (defined via SendStartTelemetry task)
-        let helixJobToken = process.env['HELIX_JOBTOKEN'];
+        let helixJobToken = tl.getInput('Helix_JobToken', true);
         let helixworkItemId = process.env['HELIX_WORKITEMID'];
 
         // Variables provided from task
