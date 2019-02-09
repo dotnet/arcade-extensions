@@ -34,7 +34,7 @@ async function Run() {
         }
 
         // Variables provided from the environment (defined via SendStartTelemetry task)
-        let helixJobToken = tl.getInput('Helix_JobToken', true);
+        let helixJobToken = tl.getInput('HELIX_JOBTOKEN', true);
         let helixworkItemId = process.env['HELIX_WORKITEMID'];
 
         // Variables provided from task
