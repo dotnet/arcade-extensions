@@ -46,7 +46,7 @@ async function Run() {
         let retryDelay:number = parseInt(tl.getInput('retryDelay', true)) * 1000;
         let runAsPublic = tl.getBoolInput('runAsPublic') || false;
         let buildConfig = tl.getInput('buildConfig');
-        let helixApiAccessToken = process.env['HelixApiAccessToken'];
+        let helixApiAccessToken = tl.getVariable('HelixApiAccessToken');
 
         // Azure DevOps defined variables
         let sourceBranch = process.env['BUILD_SOURCEBRANCH'];
@@ -74,7 +74,7 @@ async function Run() {
         console.log(`Posting job info: ${postJobInfoData}`);
 
         let helixJobInfoUri = 'https://helix.dot.net/api/2018-03-14/telemetry/job';
-        if(helixApiAccessToken !== undefined) {
+        if(helixApiAccessToken !== undefined && helixApiAccessToken != '') {
             helixJobInfoUri = `${helixJobInfoUri}?access_token=${helixApiAccessToken}`;
         }
         const helixJobOptions = {
