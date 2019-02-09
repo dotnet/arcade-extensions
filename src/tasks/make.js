@@ -51,8 +51,8 @@ var createYamlSnippetFile = util.createYamlSnippetFile;
 var createMarkdownDocFile = util.createMarkdownDocFile;
 
 // global paths
-var buildPath = path.join(__dirname, '..', '..', '.artifacts', 'tasks');
-var commonPath = path.join(__dirname, '..', '..', '.artifacts', 'tasks', 'Common');
+var buildPath = path.join(__dirname, '..\\..', '.artifacts', 'tasks');
+var commonPath = path.join(__dirname, '..\\..', '.artifacts', 'tasks', 'Common');
 var packagePath = path.join(__dirname, '..', '.package');
 
 // node min version
@@ -63,6 +63,7 @@ if (semver.lt(process.versions.node, minNodeVer)) {
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 var binPath = path.join(__dirname, 'node_modules', '.bin');
+console.log('binPath: ' + binPath );
 if (!test('-d', binPath)) {
     fail('node modules bin not found.  ensure npm install has been run.');
 }

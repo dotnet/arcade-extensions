@@ -1,6 +1,6 @@
 {
     "id": "2794c15e-9f4a-4bdc-aabf-ebbf9699bb50",
-    "name": "bashOrCmd",
+    "name": "BashOrCmd",
     "friendlyName": "Bash or CMD",
     "description": "Execute Bash on POSIX, CMD on Windows",
     "helpMarkDown": "",

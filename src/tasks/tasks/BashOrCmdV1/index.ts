@@ -4,7 +4,7 @@ import trm = require('vsts-task-lib/toolrunner');
 async function run() {
     try {
         let tool: trm.ToolRunner;
-        let agentOS = process.env["AGENT_OS"]
+        let agentOS = process.env["AGENT_OS"];
         if (agentOS === 'Windows_NT') {
             console.log("Windows... using CMD");
             let scriptPath = process.env["INPUTCMD"] || null;

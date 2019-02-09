@@ -27,7 +27,7 @@ jobs:
     displayName: Build tasks
   
   - script: package.cmd
-    displayName: Create build task extension
+    displayName: Create tasks extension
 
   - task: PublishBuildArtifacts@1
     displayName: Publish extension artifact
