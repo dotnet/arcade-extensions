@@ -1,5 +1,7 @@
 import tl = require('vsts-task-lib/task');
-import https = require('https');
+var jobInfoRequestPromise = require('request-promise');
+var buildInfoRequestPromise = require('request-promise');
+var qs = require('querystring');
 
 function CheckForRequiredEnvironmentVariable(variableName:string):boolean {
     if(process.env[variableName] === undefined) {
@@ -9,32 +11,47 @@ function CheckForRequiredEnvironmentVariable(variableName:string):boolean {
     return true;
 }
 
-async function run() {
+function Delay(ms:number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function Run() {
     try {
-        // ToDos:
-        // - parameterize job body
-        // - add retries
         let validEnvironment:boolean = true;
         validEnvironment = CheckForRequiredEnvironmentVariable("INPUTHELIXREPO") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("INPUTHELIXTYPE") && validEnvironment;
+        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTMAXRETRIES") && validEnvironment;
+        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTRETRYDELAY") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("INPUTBUILDCONFIG") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_SOURCEBRANCH") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("SYSTEM_TEAMPROJECT") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_REASON") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("AGENT_OS") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_BUILDNUMBER") && validEnvironment;
+        validEnvironment = CheckForRequiredEnvironmentVariable("SYSTEM_TASKDEFINITIONSURI") && validEnvironment;
+        validEnvironment = CheckForRequiredEnvironmentVariable("SYSTEM_TEAMPROJECT") && validEnvironment;
+        validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_BUILDID") && validEnvironment;
 
         if(!validEnvironment) {
             throw 'One or more required variables are missing';
         }
 
+        var GetEnvironmentVariableAsNumber = (variableKey:string) => {
+            let variableValue = process.env[variableKey];
+            if(variableValue === undefined) {
+                return 0;
+            }
+            let numberValue:number = parseInt(variableValue)
+            return numberValue;
+        }
         // Variables provided from task
         let helixRepo = process.env['INPUTHELIXREPO'];
         let helixType = process.env['INPUTHELIXTYPE'];
-        let maxRetries = process.env['INPUTMAXRETRIES'];
-        let retryDelay = process.env['INPUTRETRYDELAY'];
+        let maxRetries:number = GetEnvironmentVariableAsNumber('INPUTMAXRETRIES');
+        let retryDelay:number = GetEnvironmentVariableAsNumber('INPUTRETRYDELAY');
         let runAsPublic = process.env['INPUTRUNASPUBLIC'] == 'true' ? true: false;
         let buildConfig = process.env['INPUTBUILDCONFIG'];
+        let helixApiAccessToken = process.env['HelixApiAccessToken'];
 
         // Azure DevOps defined variables
         let sourceBranch = process.env['BUILD_SOURCEBRANCH'];
@@ -51,7 +68,7 @@ async function run() {
             helixSource = `official/${helixRepo}/${sourceBranch}`;
         }
         // Job info body
-        const postData = '{ ' +
+        const postJobInfoData = '{ ' +
                 `"QueueId": "${agentOs}", ` +
                 `"Source": "${helixSource}", ` +
                 `"Type": "${helixType}", ` +
@@ -59,40 +76,105 @@ async function run() {
                 '"Attempt": "1", ' +
                 `"Properties": { "operatingSystem": "${agentOs}", "configuration": "${buildConfig}" } ` +
                 '}';
+        console.log(`Posting job info: ${postJobInfoData}`);
 
-        const options = {
-            hostname: 'helix.dot.net',
-            path: '/api/2018-03-14/telemetry/job',
+        let helixJobInfoUri = 'https://helix.dot.net/api/2018-03-14/telemetry/job';
+        if(helixApiAccessToken !== undefined) {
+            helixJobInfoUri = `${helixJobInfoUri}?access_token=${helixApiAccessToken}`;
+        }
+        const helixJobOptions = {
+            uri: helixJobInfoUri,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Content-Length': Buffer.byteLength(postData)
-            }
-
+                'Content-Length': Buffer.byteLength(postJobInfoData)
+            },
+            body: postJobInfoData
         };
-        const request = https.request(options, (res) => {
-            console.log(`STATUS: ${res.statusCode}`);
-            console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-            res.setEncoding('utf8');
-            res.on('data', (chunk) => {
-                let helixAccessToken:string = chunk;
-                helixAccessToken = helixAccessToken.replace(/"/g, ""); // strip quotes
-                console.log(`##vso[task.setvariable variable=Helix_JobToken;issecret=true;]${helixAccessToken}`);
-            });
-        });
-        request.on('error', (e) => {
-            console.error(`problem with request: ${e.message}`);
-        });
-        console.log(`Posting Job Info: ${postData}`);
-        request.write(postData);
-        request.end();
 
-        // todo: check status code
+        var helixJobToken:string = '';
+        var statusCode:number = 0;
+        let attempts:number = 0;
+        var passed:boolean = false;
+        console.log('Sending job start telemetry...');
+        while(attempts < maxRetries && !passed) {
+            await jobInfoRequestPromise(helixJobOptions)
+                .then(function(body:any) {
+                    helixJobToken = body;
+                    helixJobToken = helixJobToken.replace(/"/g, ""); // strip quotes
+                    passed = true;
+                })
+                .catch(function(err:any) {
+                    console.log(`##vso[task.logissue]error ${err.message}`);
+                    statusCode = err.statusCode;
+                });
+            if(!passed) {
+                attempts++;
+                console.log(`Attempt ${attempts} of ${maxRetries} failed with status code '${statusCode}'`);
+                if(attempts < maxRetries) {
+                    console.log(`Sleeping for ${retryDelay} ms...`);
+                    await Delay(retryDelay);
+                }
+            }
+        }
+        if(!passed) {
+            console.log('##vso[task.logissue]error Send job start telemetry failed');
+            return 1;
+        }
+
+        console.log(`##vso[task.setvariable variable=Helix_JobToken;issecret=true;]${helixJobToken}`);
+
+        // encode buildUri
+        let buildUri:string = qs.stringify({buildUri: `${process.env["SYSTEM_TASKDEFINITIONSURI"]}${process.env["SYSTEM_TEAMPROJECT"]}/_build/index?buildId=${process.env["BUILD_BUILDID"]}&_a=summary`});
+        let helixBuildInfoUri = `https://helix.dot.net/api/2018-03-14/telemetry/job/build?${buildUri}`;
+
+        const helixBuildOptions = {
+            uri: helixBuildInfoUri,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Helix-Job-Token': helixJobToken
+            },
+            body: ''
+        };
+
+        attempts = 0;
+        passed = false;
+        let helixWorkItemId:string = '';
+
+        console.log('Sending build start telemetry...');
+        while(attempts < maxRetries && !passed) {
+            await buildInfoRequestPromise(helixBuildOptions)
+                .then(function(body:any) {
+                    helixWorkItemId = body;
+                    helixWorkItemId = helixWorkItemId.replace(/"/g, ""); // strip quotes
+                    passed = true;
+                })
+                .catch(function(err:any) {
+                    console.log(`##vso[task.logissue]error ${err.message}`);
+                    statusCode = err.statusCode;
+                });
+            if(!passed) {
+                attempts++;
+                console.log(`Attempt ${attempts} of ${maxRetries} failed with status code '${statusCode}'`);
+                if(attempts < maxRetries) {
+                    console.log(`Sleeping for ${retryDelay} ms...`);
+                    await Delay(retryDelay);
+                }
+            }
+        }
+        if(!passed) {
+            console.log("##vso[task.logissue]error Send build start telemetry failed");
+            return 1;
+        }
+        console.log(`##vso[task.setvariable variable=Helix_WorkItemId]${helixWorkItemId}`);
+        console.log('done');
         return 0;
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
 }
 
-run();
+Run();
