@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "dnceng-build-release-tasks",
     "name": "Dnceng Build Tasks",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "publisher": "dotnet-dnceng",
     "targets": [
         {
@@ -20,11 +20,19 @@
         {
             "path": ".artifacts/tasks/BashOrCmdV1",
             "packagePath": "BashOrCmd/BashOrCmdV1"
+        },
+        {
+            "path": ".artifacts/tasks/SendStartTelemetryV1",
+            "packagePath": "SendStartTelemetry/SendStartTelemetryV1"
+        },
+        {
+            "path": ".artifacts/tasks/SendEndTelemetryV1",
+            "packagePath": "SendEndTelemetry/SendEndTelemetryV1"
         }
     ],
     "contributions": [
         {
-            "id": "custom-build-release-task",
+            "id": "custom-build-script-task",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
@@ -32,6 +40,28 @@
             "properties": {
                 "name": "BashOrCmd/BashOrCmdV1"
             }
+        },
+        {
+            "id": "custom-build-send-start-telemetry-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "SendStartTelemetry/SendStartTelemetryV1"
+            }
+        },
+        {
+            "id": "custom-build-send-end-telemetry-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "SendEndTelemetry/SendEndTelemetryV1"
+            }
         }
+
+
     ]
 }
