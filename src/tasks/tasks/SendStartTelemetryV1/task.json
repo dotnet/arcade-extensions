@@ -11,7 +11,7 @@
         "Minor": 1,
         "Patch": 0
     },
-    "instanceNameFormat": "Echo $(samplestring)",
+    "instanceNameFormat": "Send Helix End Telemetry",
     "inputs": [
         {
             "name": "helixRepo",
@@ -46,7 +46,7 @@
         {
             "name": "runAsPublic",
             "type": "boolean",
-            "label": "Override environmental context and send telemetry as public",
+            "label": "Always send telemetry as public",
             "required": "false",
             "defaultValue": "false"
         },

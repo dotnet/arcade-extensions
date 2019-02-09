@@ -48,7 +48,7 @@ async function Run() {
         let helixRepo = process.env['INPUTHELIXREPO'];
         let helixType = process.env['INPUTHELIXTYPE'];
         let maxRetries:number = GetEnvironmentVariableAsNumber('INPUTMAXRETRIES');
-        let retryDelay:number = GetEnvironmentVariableAsNumber('INPUTRETRYDELAY');
+        let retryDelay:number = GetEnvironmentVariableAsNumber('INPUTRETRYDELAY') * 1000;
         let runAsPublic = process.env['INPUTRUNASPUBLIC'] == 'true' ? true: false;
         let buildConfig = process.env['INPUTBUILDCONFIG'];
         let helixApiAccessToken = process.env['HelixApiAccessToken'];

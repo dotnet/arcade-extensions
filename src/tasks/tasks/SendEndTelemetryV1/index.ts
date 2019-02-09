@@ -42,11 +42,10 @@ async function Run() {
 
         // Variables provided from task
         let maxRetries:number = GetEnvironmentVariableAsNumber('INPUTMAXRETRIES');
-        let retryDelay:number = GetEnvironmentVariableAsNumber('INPUTRETRYDELAY');
+        let retryDelay:number = GetEnvironmentVariableAsNumber('INPUTRETRYDELAY') * 1000;
 
         // Azure DevOps defined variables
         let agentJobStatus = process.env['AGENT_JOBSTATUS'];
-
 
         let errorCount = 1;
         let warningCount = 0;
