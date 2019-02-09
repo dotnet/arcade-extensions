@@ -1,7 +1,7 @@
 {
     "id": "0d7ddaf6-46d9-4371-9f0a-85c93b444f53",
     "name": "sendEndTelemetry",
-    "friendlyName": "Send Helix end telemetry",
+    "friendlyName": "Send Helix End Telemetry",
     "description": "Send end job telemetry for .NET Core builds",
     "helpMarkDown": "",
     "category": "Utility",
