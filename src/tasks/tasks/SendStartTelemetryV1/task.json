@@ -1,7 +1,7 @@
 {
     "id": "dba7c4fb-764a-4f08-9eb3-f5537b83959e",
     "name": "sendStartTelemetry",
-    "friendlyName": "Send start telemetry",
+    "friendlyName": "Send Helix start telemetry",
     "description": "Send start job telemetry for .NET Core builds",
     "helpMarkDown": "",
     "category": "Utility",
