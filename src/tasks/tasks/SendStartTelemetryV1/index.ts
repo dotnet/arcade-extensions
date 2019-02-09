@@ -17,15 +17,7 @@ function Delay(ms:number) {
 
 async function Run() {
     try {
-        for(var key in process.env) {
-            console.log(`${key} = ${process.env[key]}`);
-        }
         let validEnvironment:boolean = true;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTHELIXREPO") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTHELIXTYPE") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTMAXRETRIES") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTRETRYDELAY") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTBUILDCONFIG") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_SOURCEBRANCH") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("SYSTEM_TEAMPROJECT") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_REASON") && validEnvironment;
@@ -48,12 +40,12 @@ async function Run() {
             return numberValue;
         }
         // Variables provided from task
-        let helixRepo = process.env['INPUTHELIXREPO'];
-        let helixType = process.env['INPUTHELIXTYPE'];
-        let maxRetries:number = GetEnvironmentVariableAsNumber('INPUTMAXRETRIES');
-        let retryDelay:number = GetEnvironmentVariableAsNumber('INPUTRETRYDELAY') * 1000;
-        let runAsPublic = process.env['INPUTRUNASPUBLIC'] == 'true' ? true: false;
-        let buildConfig = process.env['INPUTBUILDCONFIG'];
+        let helixRepo = tl.getInput('helixRepo', true);
+        let helixType = tl.getInput('helixType', true);
+        let maxRetries:number = parseInt(tl.getInput('maxRetries', true));
+        let retryDelay:number = parseInt(tl.getInput('retryDelay', true)) * 1000;
+        let runAsPublic = tl.getBoolInput('runAsPublic') || false;
+        let buildConfig = tl.getInput('buildConfig');
         let helixApiAccessToken = process.env['HelixApiAccessToken'];
 
         // Azure DevOps defined variables

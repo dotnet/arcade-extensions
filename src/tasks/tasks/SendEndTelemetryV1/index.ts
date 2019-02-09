@@ -19,8 +19,6 @@ async function Run() {
         let validEnvironment:boolean = true;
         validEnvironment = CheckForRequiredEnvironmentVariable("HELIX_JOBTOKEN") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("HELIX_WORKITEMID") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTMAXRETRIES") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTRETRYDELAY") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("AGENT_JOBSTATUS") && validEnvironment;
 
         if(!validEnvironment) {
@@ -41,8 +39,8 @@ async function Run() {
         let helixworkItemId = process.env['HELIX_WORKITEMID'];
 
         // Variables provided from task
-        let maxRetries:number = GetEnvironmentVariableAsNumber('INPUTMAXRETRIES');
-        let retryDelay:number = GetEnvironmentVariableAsNumber('INPUTRETRYDELAY') * 1000;
+        let maxRetries:number = parseInt(tl.getInput('maxRetries', true));
+        let retryDelay:number = parseInt(tl.getInput('retryDelay', true)) * 1000;
 
         // Azure DevOps defined variables
         let agentJobStatus = process.env['AGENT_JOBSTATUS'];
