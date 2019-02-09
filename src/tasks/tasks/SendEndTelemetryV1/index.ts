@@ -17,7 +17,6 @@ function Delay(ms:number) {
 async function Run() {
     try {
         let validEnvironment:boolean = true;
-        validEnvironment = CheckForRequiredEnvironmentVariable("HELIX_WORKITEMID") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("AGENT_JOBSTATUS") && validEnvironment;
 
         if(!validEnvironment) {
@@ -34,8 +33,8 @@ async function Run() {
         }
 
         // Variables provided from the environment (defined via SendStartTelemetry task)
-        let helixJobToken = tl.getInput('SECRET_HELIX_JOBTOKEN', true);
-        let helixworkItemId = process.env['HELIX_WORKITEMID'];
+        let helixJobToken = tl.getVariable('HELIX_JOBTOKEN')
+        let helixworkItemId = tl.getVariable('HELIX_WORKITEMID');
 
         // Variables provided from task
         let maxRetries:number = parseInt(tl.getInput('maxRetries', true));
