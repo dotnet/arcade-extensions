@@ -18,11 +18,11 @@ function Delay(ms:number) {
 async function Run() {
     try {
         let validEnvironment:boolean = true;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTHELIXREPO") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTHELIXTYPE") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTMAXRETRIES") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTRETRYDELAY") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("INPUTBUILDCONFIG") && validEnvironment;
+        validEnvironment = CheckForRequiredEnvironmentVariable("INPUT_HELIXREPO") && validEnvironment;
+        validEnvironment = CheckForRequiredEnvironmentVariable("INPUT_HELIXTYPE") && validEnvironment;
+        validEnvironment = CheckForRequiredEnvironmentVariable("INPUT_MAXRETRIES") && validEnvironment;
+        validEnvironment = CheckForRequiredEnvironmentVariable("INPUT_RETRYDELAY") && validEnvironment;
+        validEnvironment = CheckForRequiredEnvironmentVariable("INPUT_BUILDCONFIG") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_SOURCEBRANCH") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("SYSTEM_TEAMPROJECT") && validEnvironment;
         validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_REASON") && validEnvironment;
@@ -45,12 +45,12 @@ async function Run() {
             return numberValue;
         }
         // Variables provided from task
-        let helixRepo = process.env['INPUTHELIXREPO'];
-        let helixType = process.env['INPUTHELIXTYPE'];
-        let maxRetries:number = GetEnvironmentVariableAsNumber('INPUTMAXRETRIES');
-        let retryDelay:number = GetEnvironmentVariableAsNumber('INPUTRETRYDELAY') * 1000;
-        let runAsPublic = process.env['INPUTRUNASPUBLIC'] == 'true' ? true: false;
-        let buildConfig = process.env['INPUTBUILDCONFIG'];
+        let helixRepo = process.env['INPUT_HELIXREPO'];
+        let helixType = process.env['INPUT_HELIXTYPE'];
+        let maxRetries:number = GetEnvironmentVariableAsNumber('INPUT_MAXRETRIES');
+        let retryDelay:number = GetEnvironmentVariableAsNumber('INPUT_RETRYDELAY') * 1000;
+        let runAsPublic = process.env['INPUT_RUNASPUBLIC'] == 'true' ? true: false;
+        let buildConfig = process.env['INPUT_BUILDCONFIG'];
         let helixApiAccessToken = process.env['HelixApiAccessToken'];
 
         // Azure DevOps defined variables
