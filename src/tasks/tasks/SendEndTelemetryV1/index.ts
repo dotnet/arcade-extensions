@@ -1,37 +1,8 @@
 import tl = require('vsts-task-lib/task');
 var rp = require('request-promise');
-var qs = require('querystring');
-
-function CheckForRequiredEnvironmentVariable(variableName:string):boolean {
-    if(process.env[variableName] === undefined) {
-        console.log(`Missing required variable "${variableName}"`);
-        return false;
-    }
-    return true;
-}
-
-function Delay(ms:number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 async function Run() {
     try {
-        let validEnvironment:boolean = true;
-        validEnvironment = CheckForRequiredEnvironmentVariable("AGENT_JOBSTATUS") && validEnvironment;
-
-        if(!validEnvironment) {
-            throw 'One or more required variables are missing';
-        }
-
-        var GetEnvironmentVariableAsNumber = (variableKey:string) => {
-            let variableValue = process.env[variableKey];
-            if(variableValue === undefined) {
-                return 0;
-            }
-            let numberValue:number = parseInt(variableValue)
-            return numberValue;
-        }
-
         // Variables provided from the environment (defined via SendStartTelemetry task)
         let helixJobToken = tl.getVariable('HELIX_JOBTOKEN')
         let helixworkItemId = tl.getVariable('HELIX_WORKITEMID');
@@ -41,7 +12,7 @@ async function Run() {
         let retryDelay:number = parseInt(tl.getInput('retryDelay', true)) * 1000;
 
         // Azure DevOps defined variables
-        let agentJobStatus = process.env['AGENT_JOBSTATUS'];
+        let agentJobStatus = process.env['AGENT_JOBSTATUS'] || '';
 
         let errorCount = 1;
         let warningCount = 0;
@@ -64,6 +35,10 @@ async function Run() {
         let passed:boolean = false;
         var statusCode:number = 0;
 
+        var delay = (ms:number) => {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         console.log('Sending build end telemetry...');
         while(attempts < maxRetries && !passed) {
             await rp(helixBuildOptions)
@@ -79,7 +54,7 @@ async function Run() {
                 console.log(`Attempt ${attempts} of ${maxRetries} failed with status code '${statusCode}'`);
                 if(attempts < maxRetries) {
                     console.log(`Sleeping for ${retryDelay} ms...`);
-                    await Delay(retryDelay);
+                    await delay(retryDelay);
                 }
             }
         }

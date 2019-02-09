@@ -1,6 +1,5 @@
 import tl = require('vsts-task-lib/task');
-var jobInfoRequestPromise = require('request-promise');
-var buildInfoRequestPromise = require('request-promise');
+import requestWithRetry from './azure-devops-request-with-retry';
 var qs = require('querystring');
 
 function CheckForRequiredEnvironmentVariable(variableName:string):boolean {
@@ -9,10 +8,6 @@ function CheckForRequiredEnvironmentVariable(variableName:string):boolean {
         return false;
     }
     return true;
-}
-
-function Delay(ms:number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function Run() {
@@ -31,14 +26,6 @@ async function Run() {
             throw 'One or more required variables are missing';
         }
 
-        var GetEnvironmentVariableAsNumber = (variableKey:string) => {
-            let variableValue = process.env[variableKey];
-            if(variableValue === undefined) {
-                return 0;
-            }
-            let numberValue:number = parseInt(variableValue)
-            return numberValue;
-        }
         // Variables provided from task
         let helixRepo = tl.getInput('helixRepo', true);
         let helixType = tl.getInput('helixType', true);
@@ -56,13 +43,13 @@ async function Run() {
         let buildNumber = process.env['BUILD_BUILDNUMBER'];
 
         let helixSource:string;
+
         if(runAsPublic || teamProject == 'public' || buildReason == 'PullRequest') {
             helixSource = `pr/${helixRepo}/${sourceBranch}`;
         }
         else {
             helixSource = `official/${helixRepo}/${sourceBranch}`;
         }
-        // Job info body
         const postJobInfoData = '{ ' +
                 `"QueueId": "${agentOs}", ` +
                 `"Source": "${helixSource}", ` +
@@ -71,9 +58,11 @@ async function Run() {
                 '"Attempt": "1", ' +
                 `"Properties": { "operatingSystem": "${agentOs}", "configuration": "${buildConfig}" } ` +
                 '}';
+
         console.log(`Posting job info: ${postJobInfoData}`);
 
-        let helixJobInfoUri = 'https://helix.dot.net/api/2018-03-14/telemetry/job';
+        let helixApiUriBase = 'https://helix.dot.net/api/2018-03-14';
+        let helixJobInfoUri = `${helixApiUriBase}/telemetry/job`;
         if(helixApiAccessToken !== undefined && helixApiAccessToken != '') {
             helixJobInfoUri = `${helixJobInfoUri}?access_token=${helixApiAccessToken}`;
         }
@@ -87,43 +76,18 @@ async function Run() {
             },
             body: postJobInfoData
         };
-
-        var helixJobToken:string = '';
-        var statusCode:number = 0;
-        let attempts:number = 0;
-        var passed:boolean = false;
         console.log('Sending job start telemetry...');
-        while(attempts < maxRetries && !passed) {
-            await jobInfoRequestPromise(helixJobOptions)
-                .then(function(body:any) {
-                    helixJobToken = body;
-                    helixJobToken = helixJobToken.replace(/"/g, ""); // strip quotes
-                    passed = true;
-                })
-                .catch(function(err:any) {
-                    console.log(`##vso[task.logissue]error ${err.message}`);
-                    statusCode = err.statusCode;
-                });
-            if(!passed) {
-                attempts++;
-                console.log(`Attempt ${attempts} of ${maxRetries} failed with status code '${statusCode}'`);
-                if(attempts < maxRetries) {
-                    console.log(`Sleeping for ${retryDelay} ms...`);
-                    await Delay(retryDelay);
-                }
-            }
-        }
-        if(!passed) {
+        let jobResult = await requestWithRetry(helixJobOptions, maxRetries, retryDelay);
+        if(jobResult.statusCode < 200 || jobResult.statusCode > 399) {
             console.log('##vso[task.logissue]error Send job start telemetry failed');
             return 1;
         }
-
+        var helixJobToken:string = jobResult.message.replace(/"/g, "");
+        
         console.log(`##vso[task.setvariable variable=Helix_JobToken;issecret=true;]${helixJobToken}`);
 
-        // encode buildUri
         let buildUri:string = qs.stringify({buildUri: `${process.env["SYSTEM_TASKDEFINITIONSURI"]}${process.env["SYSTEM_TEAMPROJECT"]}/_build/index?buildId=${process.env["BUILD_BUILDID"]}&_a=summary`});
-        let helixBuildInfoUri = `https://helix.dot.net/api/2018-03-14/telemetry/job/build?${buildUri}`;
-
+        let helixBuildInfoUri = `${helixApiUriBase}/telemetry/job/build?${buildUri}`;
         const helixBuildOptions = {
             uri: helixBuildInfoUri,
             method: 'POST',
@@ -135,41 +99,21 @@ async function Run() {
             body: ''
         };
 
-        attempts = 0;
-        passed = false;
-        let helixWorkItemId:string = '';
-
         console.log('Sending build start telemetry...');
-        while(attempts < maxRetries && !passed) {
-            await buildInfoRequestPromise(helixBuildOptions)
-                .then(function(body:any) {
-                    helixWorkItemId = body;
-                    helixWorkItemId = helixWorkItemId.replace(/"/g, ""); // strip quotes
-                    passed = true;
-                })
-                .catch(function(err:any) {
-                    console.log(`##vso[task.logissue]error ${err.message}`);
-                    statusCode = err.statusCode;
-                });
-            if(!passed) {
-                attempts++;
-                console.log(`Attempt ${attempts} of ${maxRetries} failed with status code '${statusCode}'`);
-                if(attempts < maxRetries) {
-                    console.log(`Sleeping for ${retryDelay} ms...`);
-                    await Delay(retryDelay);
-                }
-            }
-        }
-        if(!passed) {
+        let buildResult = await requestWithRetry(helixBuildOptions, maxRetries, retryDelay);
+        if(buildResult.statusCode < 200 || buildResult.statusCode >399) {
             console.log("##vso[task.logissue]error Send build start telemetry failed");
             return 1;
         }
+        let helixWorkItemId:string = buildResult.message.replace(/"/g, "");
         console.log(`##vso[task.setvariable variable=Helix_WorkItemId]${helixWorkItemId}`);
+        
         console.log('done');
         return 0;
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message);
     }
+    
 }
 
 Run();

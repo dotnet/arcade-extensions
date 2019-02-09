@@ -1,6 +1,6 @@
 {
-  "id": "dba7c4fb-764a-4f08-9eb3-f5537b83959e",
-  "name": "sendStartTelemetry",
+  "id": "0d7ddaf6-46d9-4371-9f0a-85c93b444f53",
+  "name": "SendEndTelemetry",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
@@ -13,21 +13,6 @@
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
-    {
-      "name": "helixRepo",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.helixRepo",
-      "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.helixRepo"
-    },
-    {
-      "name": "helixType",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.helixType",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.helixType",
-      "defaultValue": "build/product"
-    },
     {
       "name": "maxRetries",
       "type": "string",
@@ -42,20 +27,6 @@
       "label": "ms-resource:loc.input.label.retryDelay",
       "required": "false",
       "defaultValue": "10"
-    },
-    {
-      "name": "runAsPublic",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.runAsPublic",
-      "required": "false",
-      "defaultValue": "false"
-    },
-    {
-      "name": "buildConfig",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.buildConfig",
-      "required": "true",
-      "defaultValue": "Debug"
     }
   ],
   "execution": {

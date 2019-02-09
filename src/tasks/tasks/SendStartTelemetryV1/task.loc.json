@@ -1,6 +1,6 @@
 {
   "id": "dba7c4fb-764a-4f08-9eb3-f5537b83959e",
-  "name": "sendStartTelemetry",
+  "name": "SendStartTelemetry",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
