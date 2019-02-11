@@ -2,30 +2,8 @@ import tl = require('vsts-task-lib/task');
 import requestWithRetry from './azure-devops-request-with-retry';
 var qs = require('querystring');
 
-function CheckForRequiredEnvironmentVariable(variableName:string):boolean {
-    if(process.env[variableName] === undefined) {
-        console.log(`Missing required variable "${variableName}"`);
-        return false;
-    }
-    return true;
-}
-
 async function Run() {
     try {
-        let validEnvironment:boolean = true;
-        validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_SOURCEBRANCH") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("SYSTEM_TEAMPROJECT") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_REASON") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("AGENT_OS") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_BUILDNUMBER") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("SYSTEM_TASKDEFINITIONSURI") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("SYSTEM_TEAMPROJECT") && validEnvironment;
-        validEnvironment = CheckForRequiredEnvironmentVariable("BUILD_BUILDID") && validEnvironment;
-
-        if(!validEnvironment) {
-            throw 'One or more required variables are missing';
-        }
-
         // Variables provided from task
         let helixRepo = tl.getInput('helixRepo', true);
         let helixType = tl.getInput('helixType', true);
