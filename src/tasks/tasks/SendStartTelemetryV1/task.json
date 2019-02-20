@@ -9,7 +9,7 @@
     "version": {
         "Major": 0,
         "Minor": 1,
-        "Patch": 0
+        "Patch": 1
     },
     "instanceNameFormat": "Send Helix Start Telemetry",
     "inputs": [
@@ -25,8 +25,8 @@
             "type": "string",
             "label": "telemetry type",
             "required": false,
-            "helpMarkDown": "Type of telemetry to send, e.g. build/product",
-            "defaultValue": "build/product"
+            "helpMarkDown": "Type of telemetry to send, e.g. build/product/",
+            "defaultValue": "build/product/"
         },
         {
             "name": "maxRetries",
