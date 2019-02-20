@@ -21,6 +21,10 @@
 
 4. Build the tasks using either `/build-tasks.cmd` or `src/tasks/build.cmd`
 
+### Editing an existing custom task
+
+After making changes to the source code, be sure to rev the major, minor, or patch version in the tasks task.json file.  If you do not rev this version, then Azure DevOps will not recognize that the task is different from an exisitng task and won't update the task when you deploy.
+
 ### Packaging the task in the extension
 
 Extension packaging is controlled via the `vss-extension.json` file.
