@@ -19,6 +19,7 @@ async function Run() {
         let buildReason = process.env['BUILD_REASON'];
         let agentOs = process.env['AGENT_OS'];
         let buildNumber = process.env['BUILD_BUILDNUMBER'];
+        let jobAttempt = process.env['SYSTEM_JOBATTEMPT'] || '1';
 
         let helixSource:string;
 
@@ -33,7 +34,7 @@ async function Run() {
                 `"Source": "${helixSource}", ` +
                 `"Type": "${helixType}", ` +
                 `"Build": "${buildNumber}", ` +
-                '"Attempt": "1", ' +
+                `"Attempt": "${jobAttempt}", ` +
                 `"Properties": { "operatingSystem": "${agentOs}", "configuration": "${buildConfig}" } ` +
                 '}';
 
