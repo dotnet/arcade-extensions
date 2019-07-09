@@ -9,7 +9,7 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 2
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
@@ -26,7 +26,7 @@
       "label": "ms-resource:loc.input.label.helixType",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.helixType",
-      "defaultValue": "build/product"
+      "defaultValue": "build/product/"
     },
     {
       "name": "maxRetries",

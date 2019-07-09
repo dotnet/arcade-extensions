@@ -6,7 +6,7 @@
   "loc.input.label.helixRepo": "[organization name]/[repository name]",
   "loc.input.help.helixRepo": "Source repo, e.g. dotnet/arcade",
   "loc.input.label.helixType": "telemetry type",
-  "loc.input.help.helixType": "Type of telemetry to send, e.g. build/product",
+  "loc.input.help.helixType": "Type of telemetry to send, e.g. build/product/",
   "loc.input.label.maxRetries": "Maximum number of retry attempts",
   "loc.input.help.maxRetries": "Numeric value, default is 5",
   "loc.input.label.retryDelay": "Number of seconds to wait between retry attempts",

@@ -1,9 +1,9 @@
 {
     "manifestVersion": 1,
-    "id": "dnceng-build-release-tasks",
-    "name": "Dnceng Build Tasks",
+    "id": "dnceng-tools-test",
+    "name": "Dnceng Tools (Test)",
     "version": "0.0.19",
-    "publisher": "dotnet-dnceng",
+    "publisher": "AlexPerovich",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
@@ -16,6 +16,9 @@
     "icons": {
         "default": "images/dotnet-bot-128.jpg"
     },
+    "scopes": [
+        "vso.test"
+    ],
     "files": [
         {
             "path": ".artifacts/tasks/BashOrCmdV1",
@@ -28,7 +31,17 @@
         {
             "path": ".artifacts/tasks/SendEndTelemetryV1",
             "packagePath": "SendEndTelemetry/SendEndTelemetryV1"
-        }
+        },
+        {
+            "path": "src/helix/index.html",
+            "packagePath": "helix/index.html",
+            "addressable": true
+        },
+        {
+            "path": "src/helix/node_modules/vss-web-extension-sdk/lib",
+            "packagePath": "helix/node_modules/vss-web-extension-sdk/lib",
+            "addressable": true
+        }  
     ],
     "contributions": [
         {
@@ -60,8 +73,19 @@
             "properties": {
                 "name": "SendEndTelemetry/SendEndTelemetryV1"
             }
+        },
+        {
+            "id": "helix-test-information-tab",
+            "type": "ms.vss-web.tab",
+            "description": "Adds a tab to the test results view",
+            "targets": [
+                "ms.vss-test-web.test-result-details-tab-items"
+            ],
+            "properties": {
+                "uri": "helix/index.html",
+                "title": "Helix Test Logs",
+                "name": "Helix Test Logs"
+            }
         }
-
-
     ]
 }

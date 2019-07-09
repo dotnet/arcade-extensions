@@ -1,2 +1,4 @@
 @echo off
-call %~dp0src\tasks\build.cmd %*
+pushd %~dp0
+call npm run build
+popd
