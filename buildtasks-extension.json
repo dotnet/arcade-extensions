@@ -1,9 +1,9 @@
 {
     "manifestVersion": 1,
-    "id": "dnceng-tools-test",
-    "name": "Dnceng Tools (Test)",
-    "version": "0.0.19",
-    "publisher": "AlexPerovich",
+    "id": "dnceng-build-release-tasks",
+    "name": "Dnceng Tools",
+    "version": "0.0.20",
+    "publisher": "dotnet-dnceng",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
