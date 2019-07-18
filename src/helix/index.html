@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <title>Web Context</title>
+  <title>Helix Test Logs (Beta)</title>
   <script src="node_modules/vss-web-extension-sdk/lib/VSS.SDK.js"></script>
   <style>
     .loading {
@@ -45,7 +45,7 @@
     function registerContribution(contribution) {
       updateConfiguration(VSS.getConfiguration());
       VSS.register(contribution.id, {
-        pageTitle: "Helix Test Logs",
+        pageTitle: "Helix Test Logs (Beta)",
         updateContext: updateConfiguration,
         isInvisible: function (state) {
           // tab is always visible
