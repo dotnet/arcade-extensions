@@ -71,7 +71,7 @@
           var data = JSON.parse(result.comment);
           var jobId = data.HelixJobId;
           var workItemName = data.HelixWorkItemName;
-          var link = "https://helix.int-dot.net/AzDevExtension/WorkItemResultData?jobName=" + encodeURIComponent(jobId) + "&workItemId=" + encodeURIComponent(workItemName);
+          var link = "https://helix.dot.net/AzDevExtension/WorkItemResultData?jobName=" + encodeURIComponent(jobId) + "&workItemId=" + encodeURIComponent(workItemName);
           if (webContext.project.name !== "public") {
             return VSS.getAppToken().then(tokenObj => {
               link += "&extensionToken=" + encodeURIComponent(tokenObj.token);
