@@ -1,0 +1,12 @@
+{
+  "name": "helix",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {},
+  "author": "Microsoft",
+  "license": "MIT",
+  "dependencies": {
+    "vss-web-extension-sdk": "^5.141.0"
+  }
+}

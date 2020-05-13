@@ -1,0 +1,33 @@
+{
+  "name": "dnceng-tools",
+  "version": "1.0.0",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=5.0.0"
+  },
+  "description": "This repo contains the custom build tasks and tools used by dnceng which are distributed in the [\"DncEng Tools\"](https://marketplace.visualstudio.com/items?itemName=dotnet-dnceng.dnceng-build-release-tasks&targetId=b55de4ed-4b5a-4215-a8e4-0a0a5f71e7d8&utm_source=vstsproduct&utm_medium=ExtHubManageList) extension.",
+  "main": "",
+  "scripts": {
+    "restore-helix": "cd src/helix && npm install",
+    "restore-tasks": "cd src/tasks && npm install",
+    "restore": "npm run restore-helix && npm run restore-tasks",
+    "prebuild": "npm run restore",
+    "build-tasks": "node src/tasks/make.js build",
+    "build": "npm run build-tasks",
+    "pack": "tfx extension create --manifest-globs buildtasks-extension.json --output-path .artifacts/packages"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dotnet/arcade-extensions.git"
+  },
+  "author": "Microsoft",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dotnet/arcade-extensions/issues"
+  },
+  "homepage": "https://github.com/dotnet/arcade-extensions#readme",
+  "devDependencies": {
+    "tfx-cli": "^0.7.8"
+  }
+}

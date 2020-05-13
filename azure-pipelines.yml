@@ -7,32 +7,29 @@ jobs:
   pool: Hosted VS2017
 
   steps:
-  # Clean
   - checkout: self
-    clean: true
+    clean: all
 
-  # Use node 8, npm 5
   - task: NodeTool@0
-    displayName: Use node 8
+    displayName: Use node 10
     inputs:
-      versionSpec: "8.x"
+      versionSpec: "10.x"
 
-  # npm install
-  - script: npm install
-    displayName: npm install
-    workingDirectory: src\tasks
-
+  # restore
+  - script: restore.cmd
+    displayName: Restore
   # Build
   - script: build.cmd
-    displayName: Build tasks
+    displayName: Build
   
+  # Package Extension
   - script: package.cmd
-    displayName: Create tasks extension
+    displayName: Package Extension
 
   - task: PublishBuildArtifacts@1
     displayName: Publish extension artifact
     condition: succeeded()
     inputs:
-      pathToPublish: .artifacts\extensions
+      pathToPublish: .artifacts\packages
       artifactName: Extensions
       publishLocation: container
