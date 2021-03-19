@@ -4,7 +4,7 @@ This repo contains the custom build tasks used by dnceng which are distributed i
 
 ## Overview
 
-[Tasks overview](https://github.com/dotnet/arcade/blob/master/Documentation/Projects/DevOps/Tasks/OnePager.md)
+[Tasks overview](https://github.com/dotnet/arcade/blob/main/Documentation/Projects/DevOps/Tasks/OnePager.md)
 
 ## Contributing
 

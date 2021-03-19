@@ -1,5 +1,5 @@
 trigger:
-  - master
+  - main
 
 jobs:
 - job: build_Windows
@@ -21,7 +21,7 @@ jobs:
   # Build
   - script: build.cmd
     displayName: Build
-  
+
   # Package Extension
   - script: package.cmd
     displayName: Package Extension
