@@ -61,9 +61,12 @@
       var webContext = VSS.getWebContext();
       var testRunId = tabContext["runId"];
       var testResultId = tabContext["resultId"];
+      
+      var projectName = webContext.project.name;
+      var organizationUrl = webContext.collection.uri;
 
-      var url = "https://dev.azure.com/dnceng/" + webContext.project.name + "/_apis/test/Runs/" + testRunId + "/results/" + testResultId + "?api-version=6.0";
-      window.fetch(url)
+      var getTestResultUrl = organizationUrl + projectName + "/_apis/test/Runs/" + testRunId + "/results/" + testResultId + "?api-version=6.0";
+      window.fetch(getTestResultUrl)
         .then(response => response.json())
         .then(result => {
           var data = JSON.parse(result.comment);
