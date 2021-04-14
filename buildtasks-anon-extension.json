@@ -1,0 +1,50 @@
+{
+    "manifestVersion": 1,
+    "id": "dnceng-anon-build-release-tasks",
+    "name": "Dnceng Tools",
+    "version": "0.0.1",
+    "publisher": "dotnet-dnceng",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],    
+    "description": "Tasks for building in dnceng.",
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "icons": {
+        "default": "images/dotnet-bot-128.jpg"
+    },
+    "files": [
+        {
+            "path": "src/helix-anon/index.html",
+            "packagePath": "helix/index.html",
+            "addressable": true
+        },
+        {
+            "path": "src/helix-anon/node_modules/vss-web-extension-sdk/lib",
+            "packagePath": "helix/node_modules/vss-web-extension-sdk/lib",
+            "addressable": true
+        }  
+    ],
+    "contributions": [
+        {
+            "id": "helix-anon-test-information-tab",
+            "type": "ms.vss-web.tab",
+            "description": "Adds a tab to the test results view",
+            "targets": [
+                "ms.vss-test-web.test-result-details-tab-items"
+            ],
+            "properties": {
+                "uri": "helix/index.html",
+                "title": "Helix Test Logs (Beta)",
+                "name": "Helix Test Logs (Beta)"
+            },
+            "restrictedTo": [
+                "public",
+                "anonymous"
+            ]
+        }
+    ]
+}

@@ -10,12 +10,15 @@
   "main": "",
   "scripts": {
     "restore-helix": "cd src/helix && npm install",
+    "restore-helix-anon": "cd src/helix-anon && npm install",
     "restore-tasks": "cd src/tasks && npm install",
-    "restore": "npm run restore-helix && npm run restore-tasks",
+    "restore": "npm run restore-helix && npm run restore-helix-anon && npm run restore-tasks",
     "prebuild": "npm run restore",
     "build-tasks": "node src/tasks/make.js build",
     "build": "npm run build-tasks",
-    "pack": "tfx extension create --manifest-globs buildtasks-extension.json --output-path .artifacts/packages"
+    "pack-tasks": "tfx extension create --manifest-globs buildtasks-extension.json --output-path .artifacts/packages",
+    "pack-helix-anon": "tfx extension create --manifest-globs buildtasks-anon-extension.json --output-path .artifacts/packages",
+    "pack": "npm run pack-tasks && npm run pack-helix-anon"
   },
   "repository": {
     "type": "git",
