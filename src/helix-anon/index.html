@@ -1,0 +1,91 @@
+<html>
+
+<head>
+  <title>Helix Test Logs (Beta)</title>
+  <script src="node_modules/vss-web-extension-sdk/lib/VSS.SDK.js"></script>
+  <style>
+    .loading {
+      animation: rotation .6s infinite linear;
+      border-left: 6px solid rgba(0, 174, 239, .15);
+      border-right: 6px solid rgba(0, 174, 239, .15);
+      border-bottom: 6px solid rgba(0, 174, 239, .15);
+      border-top: 6px solid rgba(0, 174, 239, .8);
+      -ms-border-radius: 100%;
+      border-radius: 100%;
+    }
+
+    .loading.center {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      left: calc(50% - 50px);
+      top: calc(50% - 50px);
+    }
+
+    @keyframes rotation {
+      from {
+        transform: rotate(0);
+      }
+
+      to {
+        transform: rotate(359deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="content">
+    <div class="loading center"></div>
+  </div>
+
+  <script type="text/javascript">
+    VSS.init({ explicitNotifyLoaded: true, usePlatformScripts: true, usePlatformStyles: true, extensionReusedCallback: registerContribution });
+    // We need to register the new contribution if this extension host is reused
+    function registerContribution(contribution) {
+      updateConfiguration(VSS.getConfiguration());
+      VSS.register(contribution.id, {
+        pageTitle: "Helix Test Logs (Beta)",
+        updateContext: updateConfiguration,
+        isInvisible: function (state) {
+          // tab is always visible
+          return false;
+        }
+      });
+    }
+    function updateConfiguration(tabContext) {
+      if (typeof tabContext !== "object") {
+        return;
+      }
+
+      var webContext = VSS.getWebContext();
+      var testRunId = tabContext["runId"];
+      var testResultId = tabContext["resultId"];
+      
+      var projectName = webContext.project.name;
+      var organizationUrl = webContext.collection.uri;
+
+      var getTestResultUrl = organizationUrl + projectName + "/_apis/test/Runs/" + testRunId + "/results/" + testResultId + "?api-version=6.0";
+      window.fetch(getTestResultUrl)
+        .then(response => response.json())
+        .then(result => {
+          var data = JSON.parse(result.comment);
+          var jobId = data.HelixJobId;
+          var workItemName = data.HelixWorkItemName;
+          var link = "https://helix.dot.net/AzDevExtension/WorkItemResultData?jobName=" + encodeURIComponent(jobId) + "&workItemId=" + encodeURIComponent(workItemName);
+
+          window.location.href = link;
+        }).catch(() => {
+          document.getElementById("content").innerHTML = "<h3 style='color: red;'>Unable to Load Helix Data</h3>"
+        });
+    };
+
+    // Show context info when ready
+    VSS.ready(function () {
+      registerContribution(VSS.getContribution());
+      VSS.notifyLoadSucceeded();
+    });
+  </script>
+</body>
+
+</html>
