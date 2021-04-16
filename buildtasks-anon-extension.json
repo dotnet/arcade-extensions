@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "dnceng-anon-build-release-tasks",
-    "name": "Dnceng Tools",
+    "name": "Dnceng Tools Anonymous",
     "version": "0.0.1",
     "publisher": "dotnet-dnceng",
     "targets": [
