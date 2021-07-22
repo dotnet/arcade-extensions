@@ -83,8 +83,8 @@
             ],
             "properties": {
                 "uri": "helix/index.html",
-                "title": "Helix Test Artifacts",
-                "name": "Helix Test Artifacts"
+                "title": "Artifacts",
+                "name": "Artifacts"
             }, 
             "restrictedTo": [
                 "member"

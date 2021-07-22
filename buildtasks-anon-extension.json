@@ -38,8 +38,8 @@
             ],
             "properties": {
                 "uri": "helix/index.html",
-                "title": "Helix Artifacts",
-                "name": "Helix Artifacts"
+                "title": "Artifacts",
+                "name": "Artifacts"
             },
             "restrictedTo": [
                 "public",
