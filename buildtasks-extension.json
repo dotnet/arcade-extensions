@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "dnceng-build-release-tasks",
     "name": "Dnceng Tools",
-    "version": "0.0.20",
+    "version": "0.0.21",
     "publisher": "dotnet-dnceng",
     "targets": [
         {
@@ -83,8 +83,8 @@
             ],
             "properties": {
                 "uri": "helix/index.html",
-                "title": "Helix Test Logs (Beta)",
-                "name": "Helix Test Logs (Beta)"
+                "title": "Artifacts",
+                "name": "Artifacts"
             }, 
             "restrictedTo": [
                 "member"
