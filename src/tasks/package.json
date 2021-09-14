@@ -41,7 +41,7 @@
     "node-uuid": "1.4.6",
     "q": "1.4.1",
     "semver": "4.3.3",
-    "set-value": "2.0.1",
+    "set-value": "4.0.1",
     "shelljs": "^0.3.0",
     "sync-request": "3.0.1",
     "typescript": "2.3.4",
