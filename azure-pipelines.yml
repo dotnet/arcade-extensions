@@ -4,7 +4,13 @@ trigger:
 jobs:
 - job: build_Windows
   displayName: Build (Windows)
-  pool: Hosted VS2017
+  pool:
+  ${{ if eq(variables['System.TeamProject'], 'public') }}:
+    vmImage: windows-2019
+  ${{ if eq(variables['System.TeamProject'], 'internal') }}:
+    name: NetCore1ESPool-Internal
+    demands: ImageOverride -equals build.windows.10.amd64.vs2019
+
 
   steps:
   - checkout: self
