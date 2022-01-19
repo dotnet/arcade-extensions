@@ -1,6 +1,9 @@
 trigger:
   - main
 
+pr:
+  - main
+
 jobs:
 - job: build_Windows
   displayName: Build (Windows)
