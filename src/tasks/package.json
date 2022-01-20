@@ -47,7 +47,7 @@
     "typescript": "2.3.4",
     "underscore": ">=1.12.1",
     "underscore.string": ">=3.3.5",
-    "validator": "3.33.0",
+    "validator": "13.7.0",
     "vsts-task-lib": "^2.7.0",
     "@types/node": "^10.11.4",
     "@types/q": "^1.5.1"
