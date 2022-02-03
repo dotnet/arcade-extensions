@@ -34,20 +34,20 @@ stages:
         nuGetServiceConnections: GuardianConnect
 
     - pwsh: |
-        . $(Build.SourcesDirectory)\CodeQL.ps1
+        . $(Build.SourcesDirectory)\eng\CodeQL.ps1
         $guardianCliLocation = Install-Gdn -Path $(Build.SourcesDirectory)\.artifacts
         Write-Host "##vso[task.setvariable variable=GuardianCliLocation]$guardianCliLocation"
       displayName: Install Guardian
 
     - pwsh: |
-        . $(Build.SourcesDirectory)\CodeQL.ps1
+        . $(Build.SourcesDirectory)\eng\CodeQL.ps1
         Initialize-Gdn -GuardianCliLocation $(GuardianCliLocation) `
           -WorkingDirectory $(Build.SourcesDirectory) `
           -LoggerLevel 'Standard'
       displayName: 'CodeQL: Initialize'
 
     - pwsh: |
-        . $(Build.SourcesDirectory)\CodeQL.ps1
+        . $(Build.SourcesDirectory)\eng\CodeQL.ps1
         New-GdnSemmelConfig -GuardianCliLocation $(GuardianCliLocation) `
           -LoggerLevel 'Standard' `
           -Language 'javascript' `
@@ -63,7 +63,7 @@ stages:
         versionSpec: "10.x"
 
     - pwsh: |
-        . $(Build.SourcesDirectory)\CodeQL.ps1
+        . $(Build.SourcesDirectory)\eng\CodeQL.ps1
         Invoke-GdnSemmle -GuardianCliLocation $(GuardianCliLocation) `
           -LoggerLevel 'Standard' `
           -WorkingDirectory $(Build.SourcesDirectory) `
@@ -71,14 +71,14 @@ stages:
       displayName: 'CodeQL: Typescript'
 
     - pwsh: |
-        . $(Build.SourcesDirectory)\CodeQL.ps1
+        . $(Build.SourcesDirectory)\eng\CodeQL.ps1
         Publish-GdnArtifacts -GuardianCliLocation $(GuardianCliLocation) `
           -LoggerLevel 'Standard' `
           -WorkingDirectory $(Build.SourcesDirectory)
       displayName: Publish results artifact
 
     - pwsh: |
-        . $(Build.SourcesDirectory)\CodeQL.ps1
+        . $(Build.SourcesDirectory)\eng\CodeQL.ps1
         Publish-GdnTsa -GuardianCliLocation $(GuardianCliLocation) `
           -WorkingDirectory $(Build.SourcesDirectory) `
           -LoggerLevel 'Standard' `
@@ -94,7 +94,7 @@ stages:
       displayName: Publish results to TSA
 
     - pwsh: |
-        . $(Build.SourcesDirectory)\CodeQL.ps1
+        . $(Build.SourcesDirectory)\eng\CodeQL.ps1
         Invoke-GdnBuildBreak -GuardianCliLocation $(GuardianCliLocation) `
           -LoggerLevel 'Standard' `
           -WorkingDirectory $(Build.SourcesDirectory)
