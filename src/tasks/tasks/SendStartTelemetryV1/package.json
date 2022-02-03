@@ -12,5 +12,8 @@
     "vsts-task-lib": "^2.7.0",
     "request": "2.88.0",
     "request-promise": "4.2.2"
+  },
+  "overrides": {
+      "shelljs": "^0.8.5"
   }
 }

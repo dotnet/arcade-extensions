@@ -10,5 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "vsts-task-lib": "^2.7.0"
+  },
+  "overrides": {
+      "shelljs": "^0.8.5"
   }
 }
