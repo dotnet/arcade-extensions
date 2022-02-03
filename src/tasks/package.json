@@ -53,6 +53,6 @@
     "@types/q": "^1.5.1"
   },
   "overrides": {
-      "shelljs": "^0.8.5"
+    "shelljs": "^0.8.5"
   }
 }
