@@ -1,4 +1,4 @@
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 var rp = require('request-promise');
 
 async function Run() {
@@ -8,8 +8,22 @@ async function Run() {
         let helixworkItemId = tl.getVariable('HELIX_WORKITEMID');
 
         // Variables provided from task
-        let maxRetries:number = parseInt(tl.getInput('maxRetries', true));
-        let retryDelay:number = parseInt(tl.getInput('retryDelay', true)) * 1000;
+
+        let maxRetriesProto = tl.getInput('maxRetries', true);
+        let maxRetries : number;
+        if (typeof maxRetriesProto === "string") {
+            maxRetries = parseInt(maxRetriesProto);
+        } else {
+            maxRetries = 0;
+        }
+
+        let retryDelayProto = tl.getInput('retryDelay', true);
+        let retryDelay : number;
+        if(typeof retryDelayProto === "string") {
+            retryDelay = parseInt(retryDelayProto) * 1000;
+        } else {
+            retryDelay = 0;
+        }
 
         // Azure DevOps defined variables
         let agentJobStatus = process.env['AGENT_JOBSTATUS'] || '';
@@ -65,7 +79,11 @@ async function Run() {
         console.log('done');
         return 0;
     } catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err.message);
+        if (err instanceof Error) {
+            tl.setResult(tl.TaskResult.Failed, err.message);
+        } else {
+            tl.setResult(tl.TaskResult.Failed, "Unknown Error");
+        }
     }
 }
 

@@ -51,8 +51,5 @@
     "vsts-task-lib": "^2.7.0",
     "@types/node": "^10.11.4",
     "@types/q": "^1.5.1"
-  },
-  "overrides": {
-    "shelljs": "^0.8.5"
   }
 }
