@@ -1,35 +1,41 @@
 trigger:
   - main
 
-jobs:
-- job: build_Windows
-  displayName: Build (Windows)
-  pool: Hosted VS2017
+stages:
+- stage: Build
+  displayName: Build
+  jobs:
+  - job: build_Windows
+    displayName: Build (Windows)
+    pool: Hosted VS2017
 
-  steps:
-  - checkout: self
-    clean: all
+    steps:
+    - checkout: self
+      clean: all
 
-  - task: NodeTool@0
-    displayName: Use node 10
-    inputs:
-      versionSpec: "10.x"
+    - task: NodeTool@0
+      displayName: Use node 10
+      inputs:
+        versionSpec: "10.x"
 
-  # restore
-  - script: restore.cmd
-    displayName: Restore
-  # Build
-  - script: build.cmd
-    displayName: Build
+    # restore
+    - script: restore.cmd
+      displayName: Restore
+    # Build
+    - script: build.cmd
+      displayName: Build
 
-  # Package Extension
-  - script: package.cmd
-    displayName: Package Extension
+    # Package Extension
+    - script: package.cmd
+      displayName: Package Extension
 
-  - task: PublishBuildArtifacts@1
-    displayName: Publish extension artifact
-    condition: succeeded()
-    inputs:
-      pathToPublish: .artifacts\packages
-      artifactName: Extensions
-      publishLocation: container
+    # Generate SBOM
+    - template: eng\generate-sbom.yml
+
+    - task: PublishBuildArtifacts@1
+      displayName: Publish extension artifact
+      condition: succeeded()
+      inputs:
+        pathToPublish: .artifacts\packages
+        artifactName: Extensions
+        publishLocation: container
