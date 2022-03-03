@@ -4,41 +4,46 @@ trigger:
 pr:
   - main
 
-jobs:
-- job: build_Windows
-  displayName: Build (Windows)
-  pool:
+stages:
+- stage: Build
+  displayName: Build
+  jobs:
+  - job: build_Windows
+    displayName: Build (Windows)
+    pool:
     ${{ if eq(variables['System.TeamProject'], 'public') }}:
       vmImage: windows-2019
     ${{ if eq(variables['System.TeamProject'], 'internal') }}:
       name: NetCore1ESPool-Internal
       demands: ImageOverride -equals build.windows.10.amd64.vs2019
 
+    steps:
+    - checkout: self
+      clean: all
 
-  steps:
-  - checkout: self
-    clean: all
+    - task: NodeTool@0
+      displayName: Use node 10
+      inputs:
+        versionSpec: "10.x"
 
-  - task: NodeTool@0
-    displayName: Use node 10
-    inputs:
-      versionSpec: "10.x"
+    # restore
+    - script: restore.cmd
+      displayName: Restore
+    # Build
+    - script: build.cmd
+      displayName: Build
 
-  # restore
-  - script: restore.cmd
-    displayName: Restore
-  # Build
-  - script: build.cmd
-    displayName: Build
+    # Package Extension
+    - script: package.cmd
+      displayName: Package Extension
 
-  # Package Extension
-  - script: package.cmd
-    displayName: Package Extension
+    # Generate SBOM
+    - template: eng\generate-sbom.yml
 
-  - task: PublishBuildArtifacts@1
-    displayName: Publish extension artifact
-    condition: succeeded()
-    inputs:
-      pathToPublish: .artifacts\packages
-      artifactName: Extensions
-      publishLocation: container
+    - task: PublishBuildArtifacts@1
+      displayName: Publish extension artifact
+      condition: succeeded()
+      inputs:
+        pathToPublish: .artifacts\packages
+        artifactName: Extensions
+        publishLocation: container
