@@ -61,7 +61,6 @@
       var webContext = VSS.getWebContext();
       var testRunId = tabContext["runId"];
       var testResultId = tabContext["resultId"];
-
       var projectName = webContext.project.name;
       var organizationUrl = webContext.collection.uri;
 
@@ -109,8 +108,6 @@
             return { 'IsHelixWorkItem': false };
         }
     }
-
-
     // Show context info when ready
     VSS.ready(function () {
       registerContribution(VSS.getContribution());
