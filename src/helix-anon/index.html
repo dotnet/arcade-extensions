@@ -61,7 +61,6 @@
       var webContext = VSS.getWebContext();
       var testRunId = tabContext["runId"];
       var testResultId = tabContext["resultId"];
-      
       var projectName = webContext.project.name;
       var organizationUrl = webContext.collection.uri;
 
@@ -69,17 +68,46 @@
       window.fetch(getTestResultUrl)
         .then(response => response.json())
         .then(result => {
-          var data = JSON.parse(result.comment);
-          var jobId = data.HelixJobId;
-          var workItemName = data.HelixWorkItemName;
-          var link = "https://helix.dot.net/AzDevExtension/WorkItemResultData?jobName=" + encodeURIComponent(jobId) + "&workItemId=" + encodeURIComponent(workItemName);
+          var helixWorkItem = TryGetHelix(result.comment);
+          if (helixWorkItem.IsHelixWorkItem) {
+            try {
+              var jobId = helixWorkItem.HelixJobId;
+              var workItemName = helixWorkItem.HelixWorkItemName;
+              var link = "https://helix.dot.net/AzDevExtension/WorkItemResultData?jobName=" + encodeURIComponent(jobId) + "&workItemId=" + encodeURIComponent(workItemName);
 
-          window.location.href = link;
+              window.location.href = link;
+            } catch (e) {
+              document.getElementById("content").innerHTML = "<h3 style='color: red;'>Unable to Load Helix Data. Please contact <a href=\"mailto:dnceng@microsoft.com\">@dnceng</a>";
+            }
+          }
+          else {
+            document.getElementById("content").innerHTML = "<h3>This is not a helix test, for this reason there are no artifacts available in this tab</h3>";
+          }
         }).catch(() => {
-          document.getElementById("content").innerHTML = "<h3 style='color: red;'>Unable to Load Helix Data</h3>"
-        });
+                document.getElementById("content").innerHTML = "<h3>This is not a helix test, for this reason there are no artifacts available in this tab</h3>";
+       });
     };
 
+    function TryGetHelix(comment) {
+        if (comment == null) {
+            return { 'IsHelixWorkItem': false };
+        }
+        try {
+            var data = JSON.parse(comment);
+            var jobId = data.HelixJobId;
+            var workItemName = data.HelixWorkItemName;
+            if (jobId == null || workItemName == null) {
+                return { 'IsHelixWorkItem': false };
+            }
+            return {
+                'IsHelixWorkItem': true,
+                'JobId': jobId,
+                'WorkItemName': workItemName
+            };
+        } catch (error) {
+            return { 'IsHelixWorkItem': false };
+        }
+    }
     // Show context info when ready
     VSS.ready(function () {
       registerContribution(VSS.getContribution());
