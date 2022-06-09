@@ -71,8 +71,8 @@
           var helixWorkItem = TryGetHelix(result.comment);
           if (helixWorkItem.IsHelixWorkItem) {
             try {
-              var jobId = helixWorkItem.HelixJobId;
-              var workItemName = helixWorkItem.HelixWorkItemName;
+              var jobId = helixWorkItem.JobId;
+              var workItemName = helixWorkItem.WorkItemName;
               var link = "https://helix.dot.net/AzDevExtension/WorkItemResultData?jobName=" + encodeURIComponent(jobId) + "&workItemId=" + encodeURIComponent(workItemName);
 
               window.location.href = link;
