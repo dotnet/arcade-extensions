@@ -133,7 +133,7 @@ target.gendocs = function() {
 target.build = function() {
     target.clean();
 
-    ensureTool('tsc', '--version', 'Version 4.5.5');
+    ensureTool('tsc', '--version', 'Version 4.9.3');
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '5.6.0')) {
             fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
