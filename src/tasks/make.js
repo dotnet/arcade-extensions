@@ -55,6 +55,7 @@ var buildPath = path.join(__dirname, '..\\..', '.artifacts', 'tasks');
 var commonPath = path.join(__dirname, '..\\..', '.artifacts', 'tasks', 'Common');
 var packagePath = path.join(__dirname, '..', '.package');
 
+
 // node min version
 var minNodeVer = '6.10.3';
 if (semver.lt(process.versions.node, minNodeVer)) {
@@ -213,6 +214,8 @@ target.build = function() {
                     var modMake = test('-f', modMakePath) ? fileToJson(modMakePath) : {};
                     copyTaskResources(modMake, modPath, modOutDir);
 
+                    
+                    
                     // get externals
                     if (modMake.hasOwnProperty('externals')) {
                         console.log('');
@@ -363,6 +366,7 @@ target.publish = function() {
     ensureTool('nuget3.exe');
     run(`nuget3.exe push ${nupkgFile} -Source ${server} -apikey Skyrise`);
 }
+
 
 
 var agentPluginTasks = ['DownloadPipelineArtifact', 'PublishPipelineArtifact'];
