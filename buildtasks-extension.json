@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "dnceng-build-release-tasks",
     "name": "Dnceng Tools",
-    "version": "0.0.24",
+    "version": "0.0.25",
     "publisher": "dotnet-dnceng",
     "targets": [
         {
