@@ -101,7 +101,8 @@
          return { 'IsHelixWorkItem': false };
       }
       try {
-        var data = JSON.parse(comment);
+        var escapedComment = comment.replaceAll("$quot;", "\"")
+        var data = JSON.parse(escapedComment);
         var jobId = data.HelixJobId;
         var workItemName = data.HelixWorkItemName;
         if (jobId == null || workItemName == null) {
