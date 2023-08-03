@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Bash or CMD",
+  "loc.friendlyName": "[DEPRECATED] Bash or CMD",
   "loc.helpMarkDown": "",
-  "loc.description": "Execute Bash on POSIX, CMD on Windows",
+  "loc.description": "[DEPRECATED] Execute Bash on POSIX, CMD on Windows",
   "loc.instanceNameFormat": "Echo $(samplestring)",
   "loc.input.label.bash": "Bash script",
   "loc.input.help.bash": "Path to the Bash script",

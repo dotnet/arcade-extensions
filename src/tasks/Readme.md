@@ -1,3 +1,5 @@
+**NOTE**: BashOrCmd, SendEndTelemetry, and SendStartTelemetry task have been deprecated and are no longer maintained. 
+
 # Custom Azure DevOps tasks
 
 ## Prerequisites

@@ -1,7 +1,7 @@
 {
-  "loc.friendlyName": "Send Helix Start Telemetry",
+  "loc.friendlyName": "[DEPRECATED] Send Helix Start Telemetry",
   "loc.helpMarkDown": "",
-  "loc.description": "Send start job telemetry for .NET Core builds",
+  "loc.description": "[DEPRECATED] Send start job telemetry for .NET Core builds",
   "loc.instanceNameFormat": "Send Helix Start Telemetry",
   "loc.input.label.helixRepo": "[organization name]/[repository name]",
   "loc.input.help.helixRepo": "Source repo, e.g. dotnet/arcade",
