@@ -9,3 +9,13 @@ This repo contains the custom build tasks used by dnceng which are distributed i
 ## Contributing
 
 Creating a custom build task instructions are [here](./src/tasks/Readme.md)
+
+## Deprecation Notice
+
+The following tasks have been deprecated and will no longer be maintained: 
+
+- BashOrCmdV1
+- SendEndTelemetryV1
+- SendStartTelemetryV1
+
+Several npm packages have also been uninstalled from the repo as they did not appear to be used. If you are in this repo to update a package, be sure to investigate to see if it's needed (the `build` and `package` scripts utilize some Javascript code). It may be easier to uninstall a package instead of maintaining it. 
