@@ -31,24 +31,16 @@
   "devDependencies": {
     "@types/node": "^10.11.4",
     "@types/q": "^1.5.1",
-    "growl": "1.10.0",
     "gulp": "3.9.0",
     "gulp-util": "3.0.4",
     "lodash": "4.17.21",
-    "markdown-toc": "^1.2.0",
     "minimatch": "3.0.5",
     "minimist": "1.2.7",
-    "mocha": "2.5.3",
-    "mocha-junit-reporter": "1.17.0",
-    "node-uuid": "1.4.6",
     "q": "1.4.1",
     "semver": "4.3.3",
-    "set-value": "2.0.1",
     "shelljs": "^0.8.5",
     "sync-request": "3.0.1",
     "typescript": "^4.5.5",
-    "underscore": "^1.13.2",
-    "underscore.string": "^3.3.6",
     "validator": "13.7.0"
   }
 }
