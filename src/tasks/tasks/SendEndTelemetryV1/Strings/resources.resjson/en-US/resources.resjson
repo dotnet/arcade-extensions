@@ -1,9 +1,0 @@
-{
-  "loc.friendlyName": "[DEPRECATED] Send Helix End Telemetry",
-  "loc.helpMarkDown": "",
-  "loc.description": "[DEPRECATED] Send end job telemetry for .NET Core builds",
-  "loc.instanceNameFormat": "Send Helix End Telemetry",
-  "loc.input.label.maxRetries": "Maximum number of retry attempts",
-  "loc.input.help.maxRetries": "Numeric value, default is 5",
-  "loc.input.label.retryDelay": "Number of seconds to wait between retry attempts"
-}
