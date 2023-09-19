@@ -33,7 +33,7 @@ Extension packaging is controlled via the `buildtasks-extensions.json` and `buil
 
 [Extension layout guidelines](https://docs.microsoft.com/en-us/azure/devops/extend/develop/integrate-build-task?view=vsts#multiple-version-layout)
 
-1. Modify `buildtasks-extsions.json` and `buildtasks-anon-extension.json` and add appropriate entries for your created task.
+1. Modify `buildtasks-extension.json` and `buildtasks-anon-extension.json` and add appropriate entries for your created task.
 
 2. Currently, you must manually increment the version number for the manifest you are creating
 
