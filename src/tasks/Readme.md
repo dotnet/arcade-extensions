@@ -29,11 +29,11 @@ After making changes to the source code, be sure to rev the major, minor, or pat
 
 ### Packaging the task in the extension
 
-Extension packaging is controlled via the `vss-extension.json` file.
+Extension packaging is controlled via the `buildtasks-extensions.json` and `buildtasks-anon-extension.json` files.
 
 [Extension layout guidelines](https://docs.microsoft.com/en-us/azure/devops/extend/develop/integrate-build-task?view=vsts#multiple-version-layout)
 
-1. Modify `vss-extension.json` and add appropriate entries for your created task.
+1. Modify `buildtasks-extension.json` and `buildtasks-anon-extension.json` and add appropriate entries for your created task.
 
 2. Currently, you must manually increment the version number for the manifest you are creating
 
