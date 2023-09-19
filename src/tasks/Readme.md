@@ -29,7 +29,7 @@ After making changes to the source code, be sure to rev the major, minor, or pat
 
 ### Packaging the task in the extension
 
-Extension packaging is controlled via the `buildtasks-extsions.json` and `buildtasks-anon-extension.json` files.
+Extension packaging is controlled via the `buildtasks-extensions.json` and `buildtasks-anon-extension.json` files.
 
 [Extension layout guidelines](https://docs.microsoft.com/en-us/azure/devops/extend/develop/integrate-build-task?view=vsts#multiple-version-layout)
 
