@@ -21,10 +21,10 @@ stages:
     - checkout: self
       clean: all
 
-    - task: NodeTool@0
-      displayName: Use node 10
+    - task: NodeTool@1
+      displayName: Use node 22
       inputs:
-        versionSpec: "10.x"
+        version: "22.x"
 
     # restore
     - script: restore.cmd
