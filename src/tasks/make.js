@@ -56,7 +56,7 @@ var commonPath = path.join(__dirname, '..\\..', '.artifacts', 'tasks', 'Common')
 var packagePath = path.join(__dirname, '..', '.package');
 
 // node min version
-var minNodeVer = '6.10.3';
+var minNodeVer = '22.8.0';
 if (semver.lt(process.versions.node, minNodeVer)) {
     fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
 }
@@ -133,10 +133,10 @@ target.gendocs = function() {
 target.build = function() {
     target.clean();
 
-    ensureTool('tsc', '--version', 'Version 4.9.3');
+    ensureTool('tsc', '--version', 'Version 4.9.5');
     ensureTool('npm', '--version', function (output) {
-        if (semver.lt(output, '5.6.0')) {
-            fail('Expected 5.6.0 or higher. To fix, run: npm install -g npm');
+        if (semver.lt(output, '10.8.2')) {
+            fail('Expected 10.8.2 or higher. To fix, run: npm install -g npm');
         }
     });
 
