@@ -1,49 +1,133 @@
+resources:
+  repositories:
+  - repository: 1esPipelines
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+
 trigger:
   - main
 
 pr:
   - main
 
-stages:
-- stage: Build
-  displayName: Build
-  jobs:
-  - job: build_Windows
-    displayName: Build (Windows)
+variables:
+  - name: _TeamName
+    value: DotNetCore
+  - name: _PublishUsingPipelines
+    value: true
+  - name: _DotNetArtifactsCategory
+    value: .NETCore
+  - group: ArcadeExtensionsESRP  # ESRP signing task variable group
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
+  parameters:
     pool:
-      ${{ if eq(variables['System.TeamProject'], 'public') }}:
-        vmImage: windows-2019
-      ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-        name: NetCore1ESPool-Internal
-        demands: ImageOverride -equals windows.vs2019.amd64
-
-    steps:
-    - checkout: self
-      clean: all
-
-    - task: NodeTool@1
-      displayName: Use node 22
-      inputs:
-        version: "22.x"
-
-    # restore
-    - script: restore.cmd
-      displayName: Restore
-    # Build
-    - script: build.cmd
+      name: NetCore1ESPool-Internal
+      image: windows.vs2019.amd64
+      os: windows
+    customBuildTags:
+    - ES365AIMigrationTooling
+    stages:
+    - stage: Build
       displayName: Build
+      jobs:
+      - job: build_Windows
+        displayName: Build (Windows)
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            displayName: 'Publish extension artifact'
+            condition: succeeded()
+            path: '.artifacts/packages'
+            artifact: 'Extensions'
 
-    # Package Extension
-    - script: package.cmd
-      displayName: Package Extension
+        steps:
+        - checkout: self
+          clean: all
 
-    # Generate SBOM
-    - template: eng\generate-sbom.yml
+        - task: NodeTool@1
+          displayName: Use node 22
+          inputs:
+            version: "22.x"
 
-    - task: PublishBuildArtifacts@1
-      displayName: Publish extension artifact
+        # restore
+        - script: restore.cmd
+          displayName: Restore
+        # Build
+        - script: build.cmd
+          displayName: Build
+
+        # Package Extension
+        - script: package.cmd
+          displayName: Package Extension
+
+        # Generate SBOM
+        - template: eng\generate-sbom.yml
+
+    - stage: CodeSigning
+      displayName: Code Signing
+      dependsOn: Build
       condition: succeeded()
-      inputs:
-        pathToPublish: .artifacts\packages
-        artifactName: Extensions
-        publishLocation: container
+      jobs:
+      - job: SignPackages
+        displayName: Sign Extension Packages
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            displayName: 'Publish signed extension artifacts'
+            condition: succeeded()
+            path: '$(System.ArtifactsDirectory)'
+            artifact: 'Extensions-Signed'
+
+        steps:
+        - download: current
+          artifact: Extensions
+          displayName: Download unsigned extensions
+
+        - task: CopyFiles@2
+          displayName: 'Copy files to working directory'
+          inputs:
+            SourceFolder: '$(Pipeline.Workspace)/Extensions'
+            Contents: '**/*.vsix'
+            TargetFolder: '$(System.DefaultWorkingDirectory)'
+
+        - task: EsrpCodeSigning@5
+          displayName: 'ESRP Code Signing'
+          inputs:
+            ConnectedServiceName: '$(ArcadeExtensionsESRP.ConnectedServiceName)'
+            UseMSIAuthentication: true
+            EsrpClientId: '$(ArcadeExtensionsESRP.EsrpClientId)'
+            AppRegistrationClientId: '$(ArcadeExtensionsESRP.AppRegistrationClientId)'
+            AppRegistrationTenantId: '$(ArcadeExtensionsESRP.AppRegistrationTenantId)'
+            AuthAKVName: '$(ArcadeExtensionsESRP.AuthAKVName)'
+            AuthSignCertName: '$(ArcadeExtensionsESRP.AuthSignCertName)'
+            FolderPath: '$(System.DefaultWorkingDirectory)'
+            Pattern: '*.vsix'
+            UseMinimatch: true
+            signConfigType: inlineSignParams
+            inlineOperation: |
+              [
+                {
+                  "KeyCode": "CP-500813",
+                  "OperationCode": "AdoExtensionSign",
+                  "ToolName": "sign",
+                  "ToolVersion": "1.0",
+                  "Parameters": {}
+                },
+                {
+                  "KeyCode": "CP-500813",
+                  "OperationCode": "AdoExtensionVerify",
+                  "ToolName": "sign",
+                  "ToolVersion": "1.0",
+                  "Parameters": {}
+                }
+              ]
+            SessionTimeout: 30
+
+        - task: CopyFiles@2
+          displayName: 'Copy signed files to artifacts directory'
+          inputs:
+            Contents: '**/*.vsix'
+            TargetFolder: '$(System.ArtifactsDirectory)'
